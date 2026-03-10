@@ -8,6 +8,7 @@ import Signup from "./Signup";
 import CommentPopup from "../Component/Common/CommentPopup";
 import BlogDetails from "./BlogDetails";
 import PageLoader from "../Component/Common/PageLoader";
+import Profile from "./Profile";
 const featuredPosts = [
   {
     _id: "1",
@@ -104,6 +105,7 @@ const Home = () => {
       <Signup />
       <CommentPopup />
       <BlogDetails post={posts[0]} />
+      <Profile />
     </div>
   );
 };

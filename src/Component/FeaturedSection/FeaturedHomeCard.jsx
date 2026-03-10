@@ -49,7 +49,7 @@ const FeaturedHomeCard = ({ data }) => {
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full border border-blue-400 p-0.5">
                 <img
-                  src="https://via.placeholder.com"
+                  src="https://images.unsplash.com/photo-1761839259488-2bdeeae794f5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8"
                   className="w-full h-full rounded-full object-cover"
                   alt="author"
                 />

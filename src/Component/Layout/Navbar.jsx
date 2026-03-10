@@ -10,18 +10,43 @@ import {
   Menu,
   X,
   ChevronDown,
+  LayoutGrid,
+  Sparkles,
 } from "lucide-react";
 
 const Navbar = () => {
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // এটি আপনার Auth State থেকে আসবে
-
+  // ক্যাটাগরি ডাটা (এটি আপনি চাইলে এপিআই থেকেও আনতে পারেন)
+  const categories = [
+    { name: "Technology", href: "/category/tech" },
+    { name: "Programming", href: "/category/programming" },
+    { name: "Lifestyle", href: "/category/lifestyle" },
+    { name: "Travel", href: "/category/travel" },
+  ];
   const menuItems = [
     { name: "Home", icon: <Home size={18} />, href: "/" },
     { name: "Blog", icon: <BookOpen size={18} />, href: "/blog" },
     { name: "About", icon: <Info size={18} />, href: "/about" },
     { name: "Contact", icon: <Mail size={18} />, href: "/contact" },
+    {
+      name: "Categories",
+      icon: <LayoutGrid size={18} />,
+      isDropdown: true,
+      subItems: [
+        { name: "Technology", desc: "Latest gadgets & news", href: "/tech" },
+        { name: "Technology", desc: "Latest gadgets & news", href: "/tech" },
+        { name: "Programming", desc: "Code, Tips & Tricks", href: "/code" },
+        { name: "Programming", desc: "Code, Tips & Tricks", href: "/code" },
+        { name: "Lifestyle", desc: "Daily life & health", href: "/life" },
+        { name: "Lifestyle", desc: "Daily life & health", href: "/life" },
+        { name: "Travel", desc: "Explore the world", href: "/travel" },
+        { name: "Travel", desc: "Explore the world", href: "/travel" },
+      ],
+      href: "#",
+    },
   ];
 
   return (
@@ -43,9 +68,50 @@ const Navbar = () => {
               <motion.a
                 key={item.name}
                 href={item.href}
+                onMouseEnter={() =>
+                  item.isDropdown && setActiveDropdown(item.name)
+                }
+                onMouseLeave={() => setActiveDropdown(null)}
                 whileHover={{ y: -2, scale: 1.05, color: "#60A5FA" }}
-                className="flex items-center space-x-2 text-gray-200 font-medium transition-colors"
+                className="flex relative items-center space-x-2 text-gray-200 font-medium transition-colors"
               >
+                {/* --- গরজিয়াস ড্রপডাউন বক্স (Hover Effect) --- */}
+                <AnimatePresence>
+                  {item.isDropdown && activeDropdown === item.name && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-[400px] bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl p-6 z-50"
+                    >
+                      {/* ড্রপডাউনের ভেতরের ডিজাইন */}
+                      <div className="grid grid-cols-2 gap-4">
+                        {item.subItems.map((sub) => (
+                          <motion.a
+                            key={sub.name}
+                            href={sub.href}
+                            whileHover={{
+                              scale: 1.02,
+                              backgroundColor: "rgba(255,255,255,0.05)",
+                            }}
+                            className="p-4 rounded-2xl border border-transparent hover:border-white/10 transition-all group/item"
+                          >
+                            <div className="text-blue-400 font-bold mb-1 flex items-center space-x-2">
+                              <span>{sub.name}</span>
+                              <Sparkles
+                                size={12}
+                                className="opacity-0 group-hover/item:opacity-100 transition-opacity"
+                              />
+                            </div>
+                            <p className="text-xs text-gray-400 leading-tight">
+                              {sub.desc}
+                            </p>
+                          </motion.a>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 {item.icon}
                 <span>{item.name}</span>
               </motion.a>

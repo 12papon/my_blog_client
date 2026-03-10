@@ -100,7 +100,7 @@ const AboutSection = () => {
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-[3rem] group-hover:bg-purple-500/20 transition-colors duration-500" />
             <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 p-3 rounded-[3rem]">
               <img
-                src="https://images.unsplash.com"
+                src="https://images.unsplash.com/photo-1761839258575-038fef381ee7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxNXx8fGVufDB8fHx8fA%3D%3D"
                 className="w-full h-[450px] object-cover rounded-[2.5rem]"
                 alt="Team Working"
               />

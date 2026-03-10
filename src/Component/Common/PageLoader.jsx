@@ -48,7 +48,7 @@ const PageLoader = () => {
         </motion.div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes shimmer {
           to {
             background-position: 200% center;
