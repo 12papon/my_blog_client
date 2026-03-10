@@ -9,6 +9,7 @@ import CommentPopup from "../Component/Common/CommentPopup";
 import BlogDetails from "./BlogDetails";
 import PageLoader from "../Component/Common/PageLoader";
 import Profile from "./Profile";
+import MyBlogs from "./MyBlogs";
 const featuredPosts = [
   {
     _id: "1",
@@ -91,6 +92,7 @@ const Home = () => {
   if (loading) return <PageLoader />;
   return (
     <div>
+      <MyBlogs />
       <Hero />
       <section className="py-20 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
         {featuredPosts.map((post) => (

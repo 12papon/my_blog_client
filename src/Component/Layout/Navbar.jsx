@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router";
 import {
   Home,
   BookOpen,
@@ -65,36 +66,56 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {menuItems.map((item) => (
-              <motion.a
+              <div
                 key={item.name}
-                href={item.href}
                 onMouseEnter={() =>
                   item.isDropdown && setActiveDropdown(item.name)
                 }
                 onMouseLeave={() => setActiveDropdown(null)}
-                whileHover={{ y: -2, scale: 1.05, color: "#60A5FA" }}
-                className="flex relative items-center space-x-2 text-gray-200 font-medium transition-colors"
+                className="relative py-2"
               >
-                {/* --- গরজিয়াস ড্রপডাউন বক্স (Hover Effect) --- */}
+                {/* মেনু আইটেম লজিক: Link বনাম div */}
+                {!item.isDropdown ? (
+                  <motion.div whileHover={{ y: -2, scale: 1.05 }}>
+                    <Link
+                      to={item.href}
+                      className="flex items-center space-x-2 text-gray-200 font-medium hover:text-blue-400 transition-colors"
+                    >
+                      {item.icon}
+                      <span>{item.name}</span>
+                    </Link>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.05 }}
+                    className="flex items-center space-x-2 text-gray-200 font-medium hover:text-blue-400 transition-colors cursor-pointer"
+                  >
+                    {item.icon}
+                    <span>{item.name}</span>
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-300 ${
+                        activeDropdown === item.name ? "rotate-180" : ""
+                      }`}
+                    />
+                  </motion.div>
+                )}
+
+                {/* গরজিয়াস ড্রপডাউন বক্স */}
                 <AnimatePresence>
                   {item.isDropdown && activeDropdown === item.name && (
                     <motion.div
                       initial={{ opacity: 0, y: 20, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-[400px] bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl p-6 z-50"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[450px] bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-2xl p-6 z-50"
                     >
-                      {/* ড্রপডাউনের ভেতরের ডিজাইন */}
                       <div className="grid grid-cols-2 gap-4">
-                        {item.subItems.map((sub) => (
-                          <motion.a
-                            key={sub.name}
-                            href={sub.href}
-                            whileHover={{
-                              scale: 1.02,
-                              backgroundColor: "rgba(255,255,255,0.05)",
-                            }}
-                            className="p-4 rounded-2xl border border-transparent hover:border-white/10 transition-all group/item"
+                        {item.subItems.map((sub, index) => (
+                          <Link
+                            key={index}
+                            to={sub.href}
+                            className="p-4 rounded-3xl border border-transparent hover:border-white/10 hover:bg-white/5 transition-all group/item block"
                           >
                             <div className="text-blue-400 font-bold mb-1 flex items-center space-x-2">
                               <span>{sub.name}</span>
@@ -103,18 +124,16 @@ const Navbar = () => {
                                 className="opacity-0 group-hover/item:opacity-100 transition-opacity"
                               />
                             </div>
-                            <p className="text-xs text-gray-400 leading-tight">
+                            <p className="text-[11px] text-gray-400 leading-tight">
                               {sub.desc}
                             </p>
-                          </motion.a>
+                          </Link>
                         ))}
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
-                {item.icon}
-                <span>{item.name}</span>
-              </motion.a>
+              </div>
             ))}
           </div>
 
