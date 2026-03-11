@@ -2,8 +2,33 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, ArrowRight, Chrome, Github, Sparkles } from "lucide-react";
 import { Link } from "react-router";
+import { useAuth } from "../Context/AuthorContext/AuthorContext";
+import { useLogin } from "../Hooks/useAuthMutation";
+import toast from "react-hot-toast";
+import LoginLoader from "../Component/Common/LoginLoader";
+import PageLoader from "../Component/Common/PageLoader";
 
 const Login = () => {
+  const { mutate, isPending } = useLogin();
+  const { Login } = useAuth();
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    // ২. কাস্টম ভ্যালিডেশন লজিক
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailPattern.test(email)) {
+      return toast.error("সঠিক ইমেইল ঠিকানা দিন!");
+    }
+    if (!password || password.length < 6) {
+      return toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
+    }
+    mutate(formData);
+  };
+
+  if (isPending) return <PageLoader />;
   return (
     <div className="relative min-h-screen py-20 w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
       {/* --- অসামান্য ব্যাকগ্রাউন্ড আর্ট --- */}
@@ -78,7 +103,7 @@ const Login = () => {
           </p>
         </div>
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleLogin} noValidate>
           <div className="relative group">
             <Mail
               className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-400 transition-all"
@@ -86,6 +111,7 @@ const Login = () => {
             />
             <input
               type="email"
+              name="email"
               placeholder="Email Address"
               className="w-full bg-white/[0.03] border border-white/10 rounded-3xl py-5 pl-16 pr-6 text-white focus:outline-none focus:border-blue-500/40 focus:bg-white/[0.06] transition-all placeholder:text-gray-700"
             />
@@ -98,6 +124,7 @@ const Login = () => {
             />
             <input
               type="password"
+              name="password"
               placeholder="Password"
               className="w-full bg-white/[0.03] border border-white/10 rounded-3xl py-5 pl-16 pr-6 text-white focus:outline-none focus:border-indigo-500/40 focus:bg-white/[0.06] transition-all placeholder:text-gray-700"
             />
@@ -108,10 +135,13 @@ const Login = () => {
               scale: 1.02,
               boxShadow: "0 20px 40px -10px rgba(37, 99, 235, 0.4)",
             }}
+            type="submit"
+            disabled={isPending}
             whileTap={{ scale: 0.98 }}
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 py-5 rounded-3xl font-black text-white tracking-widest uppercase shadow-2xl flex justify-center items-center gap-3 transition-all"
           >
-            Sign In <ArrowRight size={20} />
+            {isPending ? "চেক করা হচ্ছে..." : "লগইন করুন"}{" "}
+            <ArrowRight size={20} />
           </motion.button>
         </form>
 

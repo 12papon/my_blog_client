@@ -83,12 +83,6 @@ const posts = [
   },
 ];
 const Home = () => {
-  const [loading, setLoading] = useState(true);
-
-  setTimeout(() => {
-    setLoading(false);
-  }, 500);
-  if (loading) return <PageLoader />;
   return (
     <div>
       <Hero />

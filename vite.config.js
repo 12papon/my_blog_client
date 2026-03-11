@@ -16,5 +16,5 @@ export default defineConfig({
       overlay: false, // অনেক সময় এরর ওভারলে eval ব্যবহার করে
     },
   },
-  base: "/my_blog/", // এই লাইনটি সব পাথকে রিলেটিভ (./) করে দেবে
+  base: import.meta.env === "production" ? "./" : "/", // এই লাইনটি সব পাথকে রিলেটিভ (./) করে দেবে
 });

@@ -2,8 +2,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, ShieldCheck, Zap } from "lucide-react";
 import { Link } from "react-router";
+import { useSignup } from "../Hooks/useAuthMutation";
+import toast from "react-hot-toast";
 
 const Signup = () => {
+  //tanstac query state
+  const { mutate, isPending, isError } = useSignup();
   //formData put
   const [formData, setFormData] = useState({
     name: "",
@@ -52,9 +56,10 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
+      mutate(formData);
       console.log("সব ঠিক আছে! API কল করা যাবে:", formData);
     } else {
-      console.log("ভ্যালিডেশন ফেইল করেছে", error);
+      toast.error("ভ্যালিডেশন ফেইল করেছে");
     }
   };
   return (
@@ -203,9 +208,10 @@ const Signup = () => {
               boxShadow: "0 25px 50px -12px rgba(219, 39, 119, 0.4)",
             }}
             whileTap={{ scale: 0.98 }}
+            disabled={isPending}
             className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 py-5 rounded-[2rem] font-black text-white uppercase tracking-widest shadow-2xl transition-all mt-4"
           >
-            Join Evolution
+            {isPending ? "প্রসেসিং..." : "সাইনআপ"}
           </motion.button>
         </form>
 

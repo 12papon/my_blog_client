@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, NavLink } from "react-router";
+import { useAuth } from "../../Context/AuthorContext/AuthorContext";
 import {
   Home,
   BookOpen,
@@ -16,10 +17,14 @@ import {
 } from "lucide-react";
 
 const Navbar = () => {
+  const { user, Logout } = useAuth();
+  const isLoggedIn = !!user;
+  console.log(user);
+  console.log(isLoggedIn);
+
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // এটি আপনার Auth State থেকে আসবে
   // ক্যাটাগরি ডাটা (এটি আপনি চাইলে এপিআই থেকেও আনতে পারেন)
   const categories = [
     { name: "Technology", href: "/category/tech" },
@@ -187,9 +192,17 @@ const Navbar = () => {
                             <BookOpen size={16} /> <span>My Blogs</span>
                           </li>
                           <hr className="border-white/10 my-1" />
-                          <li className="flex items-center space-x-2 p-2 hover:bg-red-500/20 rounded-xl cursor-pointer text-red-400 transition-colors">
-                            <LogIn size={16} className="rotate-180" />{" "}
-                            <span>Logout</span>
+                          <li className="flex items-center hover:bg-red-500/20 rounded-xl cursor-pointer text-red-400 transition-colors">
+                            <button
+                              onClick={() => {
+                                Logout();
+                                setShowDropdown(false);
+                              }}
+                              className="bg-none border-none p-2 flex items-center justify-center space-x-2"
+                            >
+                              <LogIn size={16} className="rotate-180" />
+                              <span>Logout</span>
+                            </button>
                           </li>
                         </ul>
                       </motion.div>
@@ -198,15 +211,16 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
             ) : (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-medium shadow-lg transition-all"
-                onClick={() => setIsLoggedIn(true)} // টেস্ট করার জন্য
-              >
-                <LogIn size={18} />
-                <span>Login</span>
-              </motion.button>
+              <NavLink to="/login">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-medium shadow-lg transition-all"
+                >
+                  <LogIn size={18} />
+                  <span>Login</span>
+                </motion.button>
+              </NavLink>
             )}
           </div>
 
@@ -242,16 +256,19 @@ const Navbar = () => {
                   </a>
                 ))}
                 <hr className="border-white/10" />
-                {!isLoggedIn ? (
-                  <button className="flex items-center space-x-3 text-blue-400 font-bold py-2">
-                    <LogIn size={20} />
-                    <span>Login / Sign Up</span>
-                  </button>
-                ) : (
-                  <button className="flex items-center space-x-3 text-purple-400 font-bold py-2">
+                {isLoggedIn ? (
+                  <Link className="flex items-center space-x-3 text-purple-400 font-bold py-2">
                     <User size={20} />
                     <span>My Profile</span>
-                  </button>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="flex items-center space-x-3 text-blue-400 font-bold py-2"
+                  >
+                    <LogIn size={20} />
+                    <span>Login</span>
+                  </Link>
                 )}
               </div>
             </motion.div>

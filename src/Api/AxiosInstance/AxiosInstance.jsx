@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 // ১. বেস কনফিগারেশন তৈরি
 const axiosInstance = axios.create({
@@ -30,11 +31,22 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response, // সফল হলে ডাটা সরাসরি পাঠিয়ে দেবে
   (error) => {
+    // ২. ব্যাকএন্ড থেকে আসা মেসেজটি ধরো
+    const message =
+      error.response?.data?.message || "সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না!";
     if (error.response?.status === 401) {
       // টোকেন এক্সপায়ার হলে বা ইউজার আন-অথরাইজড হলে অটো লগআউট
       localStorage.removeItem("user");
+      // টোস্ট দেখিয়ে তারপর রিডিরেক্ট করা ভালো
+      toast.error("সেশন শেষ! আবার লগইন করুন।");
       window.location.href = "/login";
+    } else {
+      // ৩. অন্য সব ধরনের এপিআই এররের জন্য টোস্ট দেখাও
+      toast.error(message);
     }
+
     return Promise.reject(error);
   },
 );
+
+export default axiosInstance;
