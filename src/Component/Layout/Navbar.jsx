@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import {
   Home,
   BookOpen,
@@ -77,13 +77,19 @@ const Navbar = () => {
                 {/* মেনু আইটেম লজিক: Link বনাম div */}
                 {!item.isDropdown ? (
                   <motion.div whileHover={{ y: -2, scale: 1.05 }}>
-                    <Link
+                    <NavLink
                       to={item.href}
-                      className="flex items-center space-x-2 text-gray-200 font-medium hover:text-blue-400 transition-colors"
+                      className={({ isActive }) =>
+                        `flex items-center space-x-2  font-medium  transition-colors ${
+                          isActive
+                            ? "text-blue-400 border-b-2 border-blue-500 pb-1" // অ্যাক্টিভ হলে এই স্টাইল
+                            : "text-gray-200 hover:text-blue-400" // সাধারণ অবস্থায় এই স্টাইল
+                        }`
+                      }
                     >
                       {item.icon}
                       <span>{item.name}</span>
-                    </Link>
+                    </NavLink>
                   </motion.div>
                 ) : (
                   <motion.div

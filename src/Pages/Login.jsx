@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 const Login = () => {
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
+    <div className="relative min-h-screen py-20 w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
       {/* --- অসামান্য ব্যাকগ্রাউন্ড আর্ট --- */}
       <div className="absolute inset-0 pointer-events-none ">
         <motion.div

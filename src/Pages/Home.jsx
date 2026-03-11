@@ -9,7 +9,6 @@ import CommentPopup from "../Component/Common/CommentPopup";
 import BlogDetails from "./BlogDetails";
 import PageLoader from "../Component/Common/PageLoader";
 import Profile from "./Profile";
-import MyBlogs from "./MyBlogs";
 const featuredPosts = [
   {
     _id: "1",
@@ -88,11 +87,10 @@ const Home = () => {
 
   setTimeout(() => {
     setLoading(false);
-  }, 2000);
+  }, 500);
   if (loading) return <PageLoader />;
   return (
     <div>
-      <MyBlogs />
       <Hero />
       <section className="py-20 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
         {featuredPosts.map((post) => (
@@ -103,8 +101,6 @@ const Home = () => {
       <section>
         <ContactSection />
       </section>
-      <Login />
-      <Signup />
       <CommentPopup />
       <BlogDetails post={posts[0]} />
       <Profile />

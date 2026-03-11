@@ -1,11 +1,64 @@
-import React from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, ShieldCheck, Zap } from "lucide-react";
 import { Link } from "react-router";
 
 const Signup = () => {
+  //formData put
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  //put Error
+  const [error, setError] = useState({});
+
+  //Validation function
+  const validate = () => {
+    let newErrors = {};
+    // নাম চেক (কমপক্ষে ৩ অক্ষর)
+    if (!formData.name.trim()) {
+      newErrors.name = "নাম অবশ্যই দিতে হবে";
+    } else if (formData.name.length < 3) {
+      newErrors.name = "নাম কমপক্ষে ৩ অক্ষরের হতে হবে";
+    }
+
+    // ইমেইল প্যাটার্ন চেক
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = "ইমেইল প্রয়োজন";
+    } else if (!emailPattern.test(formData.email)) {
+      newErrors.email = "সঠিক ইমেইল ফরম্যাট দিন";
+    }
+    // পাসওয়ার্ড প্যাটার্ন (কমপক্ষে ৬ অক্ষর, ১টি বড় হাতের অক্ষর ও ১টি সংখ্যা)
+    const passwordPattern = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!formData.password) {
+      newErrors.password = "পাসওয়ার্ড দিতে হবে";
+    } else if (!passwordPattern.test(formData.password)) {
+      newErrors.password =
+        "পাসওয়ার্ডে অন্তত ৬ অক্ষর, ১টি বড় হাতের অক্ষর ও ১টি সংখ্যা থাকতে হবে";
+    }
+
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0; // কোনো এরর না থাকলে true দিবে
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      console.log("সব ঠিক আছে! API কল করা যাবে:", formData);
+    } else {
+      console.log("ভ্যালিডেশন ফেইল করেছে", error);
+    }
+  };
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
+    <div className="relative min-h-screen py-20 w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
       {/* --- ডায়নামিক মেশ ব্যাকগ্রাউন্ড --- */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -73,43 +126,70 @@ const Signup = () => {
           </p>
         </div>
 
-        <form className="space-y-5">
-          <div className="relative">
-            <User
-              className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full bg-white/5 border border-white/10 rounded-[2rem] py-5 pl-16 pr-6 text-white focus:outline-none focus:border-purple-500/50 transition-all placeholder:text-gray-700 font-medium"
-            />
+        <form onSubmit={handleSubmit} noValidate className="space-y-5">
+          <div>
+            <div className="relative">
+              <User
+                className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="Full Name"
+                onChange={handleChange}
+                name="name"
+                value={formData.name}
+                className="w-full bg-white/5 border border-white/10 rounded-[2rem] py-5 pl-16 pr-6 text-white focus:outline-none focus:border-purple-500/50 transition-all placeholder:text-gray-700 font-medium"
+              />
+            </div>
+            {error.password && (
+              <p className="text-red-500 text-sm text-center font-medium px-4">
+                {error.name}
+              </p>
+            )}
           </div>
-
-          <div className="relative">
-            <Mail
-              className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600"
-              size={18}
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="w-full bg-white/5 border border-white/10 rounded-[2rem] py-5 pl-16 pr-6 text-white focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-gray-700 font-medium"
-            />
+          <div>
+            <div className="relative">
+              <Mail
+                className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600"
+                size={18}
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                onChange={handleChange}
+                name="email"
+                value={formData.email}
+                className="w-full bg-white/5 border border-white/10 rounded-[2rem] py-5 pl-16 pr-6 text-white focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-gray-700 font-medium"
+              />
+            </div>
+            {error.password && (
+              <p className="text-red-500 text-sm text-center font-medium px-4">
+                {error.email}
+              </p>
+            )}
           </div>
-
-          <div className="relative">
-            <Lock
-              className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600"
-              size={18}
-            />
-            <input
-              type="password"
-              placeholder="Create Password"
-              className="w-full bg-white/5 border border-white/10 rounded-[2rem] py-5 pl-16 pr-6 text-white focus:outline-none focus:border-pink-500/50 transition-all placeholder:text-gray-700 font-medium"
-            />
+          <div>
+            <div className="relative">
+              <Lock
+                className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600"
+                size={18}
+              />
+              <input
+                type="password"
+                placeholder="Create Password"
+                onChange={handleChange}
+                name="password"
+                value={formData.password}
+                className="w-full bg-white/5 border border-white/10 rounded-[2rem] py-5 pl-16 pr-6 text-white focus:outline-none focus:border-pink-500/50 transition-all placeholder:text-gray-700 font-medium"
+              />
+            </div>
+            {error.password && (
+              <p className="text-red-500 text-sm text-center font-medium px-4">
+                {error.password}
+              </p>
+            )}
           </div>
-
           <div className="flex items-center gap-2 px-4 py-2 bg-green-500/5 rounded-xl border border-green-500/10 w-fit">
             <ShieldCheck size={14} className="text-green-500" />
             <span className="text-[9px] text-green-500 font-black uppercase tracking-widest">
