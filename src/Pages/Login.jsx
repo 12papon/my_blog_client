@@ -5,7 +5,6 @@ import { Link } from "react-router";
 import { useAuth } from "../Context/AuthorContext/AuthorContext";
 import { useLogin } from "../Hooks/useAuthMutation";
 import toast from "react-hot-toast";
-import LoginLoader from "../Component/Common/LoginLoader";
 import PageLoader from "../Component/Common/PageLoader";
 
 const Login = () => {

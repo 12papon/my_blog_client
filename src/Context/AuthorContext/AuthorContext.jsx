@@ -77,8 +77,8 @@ export const AuthProvider = ({ children }) => {
    * এখন শুধুমাত্র 'user' চেঞ্জ হলেই প্রোপ্রাইডার তার চিলড্রেনদের রি-রেন্ডার করবে।
    */
   const authValue = useMemo(
-    () => ({ user, Login, Logout }),
-    [user, Login, Logout],
+    () => ({ user, Login, Logout, setUser }),
+    [user, Login, Logout, setUser],
   );
 
   return (
