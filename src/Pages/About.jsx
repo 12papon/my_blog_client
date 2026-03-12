@@ -48,7 +48,7 @@ const About = () => {
   return (
     <div
       onMouseMove={handleMouseMove}
-      className="relative z-10 min-h-screen pt-32 pb-20 px-6 overflow-hidden  "
+      className="relative z-10 min-h-screen pt-35 pb-20 px-6 overflow-hidden  "
     >
       {/* Background Blobs for Atmosphere */}
 

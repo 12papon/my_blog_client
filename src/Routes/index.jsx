@@ -8,6 +8,9 @@ import Contact from "../Pages/Contact";
 import NotFound from "../Pages/NotFound";
 import Login from "../Pages/Login";
 import Signup from "../Pages/Signup";
+import Profile from "../Pages/Profile";
+import MyBlogs from "../Pages/MyBlogs";
+import BlogDetails from "../Pages/BlogDetails";
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "blog", element: <Blog /> },
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
+      { path: "blogdetails", element: <BlogDetails /> },
       // ২. শুধুমাত্র যারা লগইন নেই তাদের জন্য (Public Guard)
       {
         element: <PublicRoute />,
@@ -28,6 +32,13 @@ export const router = createBrowserRouter([
         ],
       },
       // ৩. শুধুমাত্র যারা লগইন আছে তাদের জন্য (Private Guard)
+      {
+        element: <PrivateRoute />,
+        children: [
+          { path: "my_profile", element: <Profile /> },
+          { path: "my_blogs", element: <MyBlogs /> },
+        ],
+      },
     ],
   },
   {

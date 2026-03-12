@@ -35,7 +35,7 @@ const Contact = () => {
   return (
     <div
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen w-full flex items-center justify-center bg-transparent overflow-hidden px-4 py-20 font-sans"
+      className="relative min-h-screen w-full flex items-center justify-center bg-transparent overflow-hidden px-4 pt-30 md:pt-35 font-sans"
     >
       {/* --- ব্যাকগ্রাউন্ড লিকুইড অ্যানিমেশন --- */}
       <div className="absolute inset-0 pointer-events-none">

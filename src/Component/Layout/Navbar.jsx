@@ -15,6 +15,7 @@ import {
   LayoutGrid,
   Sparkles,
 } from "lucide-react";
+import PageLoader from "../Common/PageLoader";
 
 const Navbar = () => {
   const { user, Logout } = useAuth();
@@ -54,7 +55,11 @@ const Navbar = () => {
       href: "#",
     },
   ];
-
+  if (!isLoggedIn) {
+    setTimeout(() => {
+      return <PageLoader />;
+    }, 1000);
+  }
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-4">
       {/* Main Container - Glassmorphism Effect */}
@@ -162,8 +167,8 @@ const Navbar = () => {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center">
                     <User size={18} className="text-white" />
                   </div>
-                  <span className="text-white text-sm font-medium">
-                    Profile
+                  <span className=" font-bold bg-gradient-to-tr from-blue-500 to-purple-600 bg-clip-text text-transparent">
+                    {user.name.toUpperCase()}
                   </span>
                   <ChevronDown
                     size={14}
@@ -184,34 +189,46 @@ const Navbar = () => {
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         className="absolute right-0 mt-3 w-48 bg-slate-800/90 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-2 z-50"
                       >
-                        <ul className="space-y-1">
-                          <li className="flex items-center space-x-2 p-2 hover:bg-white/10 rounded-xl cursor-pointer text-gray-200 transition-colors">
-                            <User size={16} /> <span>My Profile</span>
-                          </li>
-                          <li className="flex items-center space-x-2 p-2 hover:bg-white/10 rounded-xl cursor-pointer text-gray-200 transition-colors">
-                            <BookOpen size={16} /> <span>My Blogs</span>
-                          </li>
+                        <div className="space-y-1">
+                          <NavLink
+                            to="/my_profile"
+                            className={({ isActive }) =>
+                              `flex items-center p-2 hover:bg-white/10 space-x-2 rounded-xl cursor-pointer text-gray-200 transition-colors ${isActive ? "bg-white/10" : "bg-none"}`
+                            }
+                          >
+                            <User size={16} />
+                            <span>My Profile</span>
+                          </NavLink>
+                          <NavLink
+                            to="/my_blogs"
+                            className={({ isActive }) =>
+                              `flex items-center p-2 hover:bg-white/10 space-x-2 rounded-xl cursor-pointer text-gray-200 transition-colors ${isActive ? "bg-white/10" : "bg-none"}`
+                            }
+                          >
+                            <BookOpen size={16} />
+                            <span>My Blogs</span>
+                          </NavLink>
                           <hr className="border-white/10 my-1" />
-                          <li className="flex items-center hover:bg-red-500/20 rounded-xl cursor-pointer text-red-400 transition-colors">
+                          <div className="flex items-center p-2 hover:bg-red-500/20  rounded-xl cursor-pointer text-red-400 transition-colors">
                             <button
                               onClick={() => {
                                 Logout();
                                 setShowDropdown(false);
                               }}
-                              className="bg-none border-none p-2 flex items-center justify-center space-x-2"
+                              className="flex items-center space-x-2"
                             >
                               <LogIn size={16} className="rotate-180" />
                               <span>Logout</span>
                             </button>
-                          </li>
-                        </ul>
+                          </div>
+                        </div>
                       </motion.div>
                     </>
                   )}
                 </AnimatePresence>
               </div>
             ) : (
-              <NavLink to="/login">
+              <Link to="/login">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -220,7 +237,7 @@ const Navbar = () => {
                   <LogIn size={18} />
                   <span>Login</span>
                 </motion.button>
-              </NavLink>
+              </Link>
             )}
           </div>
 
@@ -257,7 +274,10 @@ const Navbar = () => {
                 ))}
                 <hr className="border-white/10" />
                 {isLoggedIn ? (
-                  <Link className="flex items-center space-x-3 text-purple-400 font-bold py-2">
+                  <Link
+                    to="/my_profile"
+                    className="flex items-center space-x-3 text-purple-400 font-bold py-2"
+                  >
                     <User size={20} />
                     <span>My Profile</span>
                   </Link>

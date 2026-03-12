@@ -35,7 +35,7 @@ const MyBlogs = () => {
   const showLess = () => setVisibleCount(6);
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white pt-28 pb-20 px-4 overflow-hidden relative">
+    <div className="min-h-screen bg-[#020617] text-white md:pt-35 pt-28 pb-20 px-4 overflow-hidden relative">
       {/* Background Glows */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] animate-pulse" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] animate-pulse" />

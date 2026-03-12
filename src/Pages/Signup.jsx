@@ -63,7 +63,7 @@ const Signup = () => {
     }
   };
   return (
-    <div className="relative min-h-screen py-20 w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
+    <div className="relative min-h-screen py-30 w-full flex items-center justify-center bg-transparent overflow-hidden font-sans px-6">
       {/* --- ডায়নামিক মেশ ব্যাকগ্রাউন্ড --- */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div

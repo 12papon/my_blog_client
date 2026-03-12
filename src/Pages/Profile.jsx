@@ -23,8 +23,14 @@ import {
   MessageCircle,
   Share2,
 } from "lucide-react";
-
+import { useAuth } from "../Context/AuthorContext/AuthorContext";
 const Profile = () => {
+  const { user } = useAuth();
+  const date = new Date(user.joinDate);
+  const month = date.toLocaleString("default", { month: "long" });
+  const year = date.getFullYear();
+  console.log(user.socialLinks);
+
   const [activeTab, setActiveTab] = useState("my-blogs"); // ডিফল্ট ট্যাব
   // এনিমেশন ভ্যারিয়েন্ট
   const containerVars = {
@@ -41,7 +47,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white pt-28 pb-10 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
+    <div className="min-h-screen bg-[#020617] text-white md:pt-40 pt-25 pb-10 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
       {/* Background Animated Blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
@@ -77,36 +83,52 @@ const Profile = () => {
             </div>
 
             <h1 className="text-3xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Tanvir Ahmed
+              {user.name.toUpperCase()}
             </h1>
-            <p className="text-blue-400 font-medium mb-6">
-              Full Stack Developer
-            </p>
+            <p className="text-blue-400 font-medium mb-6">{user.designation}</p>
 
             <div className="space-y-3 text-left border-t border-white/10 pt-6">
               <div className="flex items-center space-x-3 text-gray-400 text-sm">
-                <MapPin size={16} /> <span>Dhaka, Bangladesh</span>
+                <MapPin size={16} /> <span>{user.address}</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-400 text-sm">
-                <Calendar size={16} /> <span>Joined March 2024</span>
+                <Calendar size={16} />{" "}
+                <span>Joined {`${month} ${year.toString()}`}</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-400 text-sm">
-                <Mail size={16} /> <span>tanvir@example.com</span>
+                <Mail size={16} /> <span>{user.email}</span>
               </div>
             </div>
 
             {/* Social Links */}
             <div className="flex justify-center space-x-4 mt-8">
-              {[Github, Twitter, Globe].map((Icon, i) => (
+              {["Github", "Twitter", "Globe"].map((Icon, i) => (
                 <motion.a
                   key={i}
-                  whileHover={{ scale: 1.2, y: -5 }}
-                  className="p-3 bg-white/5 rounded-2xl hover:bg-blue-500/20 transition-all border border-white/5"
+                  href={user?.socialLinks?.[Icon.toLowerCase()] || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  className="p-3 bg-white/5 rounded-2xl hover:bg-blue-500/20 transition-all border border-white/5 z-50"
                 >
-                  <Icon
-                    size={20}
-                    className="text-gray-300 hover:text-blue-400"
-                  />
+                  {Icon === "Github" && (
+                    <Github
+                      size={20}
+                      className="text-gray-300 hover:text-blue-400"
+                    />
+                  )}
+                  {Icon === "Twitter" && (
+                    <Twitter
+                      size={20}
+                      className="text-gray-300 hover:text-blue-400"
+                    />
+                  )}
+                  {Icon === "Globe" && (
+                    <Globe
+                      size={20}
+                      className="text-gray-300 hover:text-blue-400"
+                    />
+                  )}
                 </motion.a>
               ))}
             </div>
@@ -138,7 +160,7 @@ const Profile = () => {
             variants={itemVars}
             className="bg-gradient-to-br from-blue-600/20 to-transparent backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center justify-center"
           >
-            <h3 className="text-4xl font-black text-white">45+</h3>
+            <h3 className="text-4xl font-black text-white">{`${user?.awardswon}+`}</h3>
             <p className="text-blue-400 uppercase tracking-widest text-xs font-bold mt-2">
               Projects Done
             </p>
@@ -148,7 +170,9 @@ const Profile = () => {
             variants={itemVars}
             className="bg-gradient-to-br from-purple-600/20 to-transparent backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 flex flex-col items-center justify-center"
           >
-            <h3 className="text-4xl font-black text-white">12</h3>
+            <h3 className="text-4xl font-black text-white">
+              {user?.projectDone}
+            </h3>
             <p className="text-purple-400 uppercase tracking-widest text-xs font-bold mt-2">
               Awards Won
             </p>

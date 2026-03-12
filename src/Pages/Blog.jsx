@@ -186,7 +186,7 @@ const Blog = () => {
     }, 3000);
   }, []);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-10 bg-transparent">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:pt-35 pt-25 p-10 bg-transparent">
       {
         loading
           ? [1, 2, 3, 4, 5, 6].map((n) => <SingleCardLoader key={n} />) // লোডিং অবস্থায় স্কেলিটন দেখাবে
