@@ -1,4 +1,6 @@
 import { useForm, FormProvider } from "react-hook-form";
+import { useCreatePost } from "../../../../Hooks/PostHooks/usePost";
+import { useAuth } from "../../../../Context/AuthorContext/AuthorContext";
 import { Sparkles, Tag } from "lucide-react";
 import Preview from "./Fields/Preview/Preview";
 import Publish from "./Fields/Action/Publish";
@@ -11,9 +13,32 @@ import Excerpt from "./Fields/Excerpt/Excerpt";
 import Title from "./Fields/Title/Title";
 
 const CreatePost = () => {
+  const { user } = useAuth();
+  console.log(user._id);
+
+  const { mutate, isPending } = useCreatePost();
   const methods = useForm(); // সব মেথড এখানে আছে
   const onSubmit = (data) => {
-    console.log("পুরো ফর্মের ডাটা:", data); // এখানে সব মডিউলের ডাটা একসাথে পাবেন
+    //Form Data Object create
+    const formData = new FormData();
+    // ১. টেক্সট ডাটা অ্যাপেন্ড করা
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+    formData.append("excerpt", data.excerpt);
+    formData.append("status", data.status);
+    formData.append("isFeatured", data.isFeatured);
+    formData.append("userId", user._id);
+    // ২. আপনার সেই স্পেশাল অ্যারে ডাটা (JSON stringify করে পাঠানো নিরাপদ)
+    formData.append("categories", JSON.stringify(data.categories));
+    formData.append("tags", JSON.stringify(data.tags));
+
+    if (data.image) {
+      formData.append("featuredimage", data.image);
+    }
+
+    // ৪. হুকের মাধ্যমে সার্ভারে ডাটা পাঠানো
+    mutate(formData);
+    console.log(data); // এখানে সব মডিউলের ডাটা একসাথে পাবেন
   };
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl">

@@ -1,12 +1,13 @@
-
-
+import { useFormContext } from "react-hook-form";
 const Content = () => {
+  const { register } = useFormContext();
   return (
     <div>
       <label className="text-sm font-medium text-gray-400 ml-2 mb-2 block">
         Story Content
       </label>
       <textarea
+        {...register("content", { required: "Content is required" })}
         required
         placeholder="Once upon a time..."
         rows="10"

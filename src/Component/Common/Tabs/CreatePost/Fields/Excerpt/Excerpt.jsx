@@ -7,7 +7,7 @@ const Excerpt = () => {
         Short Excerpt (Intro)
       </label>
       <textarea
-        {...register("content", { required: "Content is required" })}
+        {...register("excerpt", { required: "Excerpt is required" })}
         placeholder="Write a brief summary..."
         maxLength={200}
         rows="2"
