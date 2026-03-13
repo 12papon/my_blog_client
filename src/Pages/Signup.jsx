@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const Signup = () => {
   //tanstac query state
-  const { mutate, isPending, isError } = useSignup();
+  const { mutate, isPending } = useSignup();
   //formData put
   const [formData, setFormData] = useState({
     name: "",
