@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import "./CommentPopupStyle.css";
 import {
   X,
   Send,
@@ -11,11 +12,11 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../Context/AuthorContext/AuthorContext";
 import { useComment } from "../../Hooks/Comment/PostComment/PostComment";
+import toast from "react-hot-toast";
 
-const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id }) => {
+const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id, img }) => {
   const { user } = useAuth();
-  const 
-  console.log(user._id);
+  const { mutate } = useComment();
 
   const [comment, setComment] = useState("");
 
@@ -34,9 +35,10 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id }) => {
       post: id,
       text: comment,
     };
-
-    console.log(commentData);
-
+    if(!commentData.text){
+      toast.error("কোন কমেন্ট লিক্ষা")
+    }
+    mutate(commentData);
     setComment("");
   };
   return (
@@ -58,7 +60,7 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id }) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 50 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-[600px] bg-white/[0.03] backdrop-blur-[50px] border border-white/10 rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] overflow-hidden"
+            className="relative w-full max-w-[500px] bg-white/[0.03] backdrop-blur-[50px] border border-white/10 rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] overflow-hidden"
           >
             {/* ৩. অ্যানিমেটেড বর্ডার ফ্লো (আপনার সিগনেচার স্টাইল) */}
             <div className="absolute inset-0 p-[1.5px] rounded-[3.5rem] overflow-hidden pointer-events-none">
@@ -104,37 +106,43 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id }) => {
               </div>
 
               {/* কমেন্ট লিস্ট (Scrollable) */}
-              {commentData?.map((data) => {
-                return (
-                  <div
-                    key={data?._id}
-                    className="max-h-[300px] overflow-y-auto mb-8 pr-4 space-y-6 custom-scrollbar"
-                  >
-                    {/* ডামি কমেন্ট ১ */}
-                    <div className="flex gap-4 group">
-                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
-                        <div className="w-full h-full bg-[#030712] rounded-[14px] flex items-center justify-center font-bold text-white text-xs">
-                          AR
+              <div className="max-h-[350px] overflow-y-auto mb-8 pr-2 custom-scrollbar space-y-6">
+                {commentData?.map((data) => {
+                  return (
+                    <div
+                      key={data?._id}
+                      className="max-h-[300px] overflow-y-auto mb-8 pr-4 space-y-6 custom-scrollbar"
+                    >
+                      {/* ডামি কমেন্ট ১ */}
+                      <div className="flex gap-4 group">
+                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
+                          <div className="w-full h-full bg-[#030712] rounded-[14px] flex items-center justify-center font-bold text-white text-xs">
+                            <img
+                              className="w-full h-full bg-[#030712] rounded-[14px] flex items-center justify-center font-bold text-white text-xs"
+                              src={img}
+                              alt={img}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white text-sm font-black mb-1 group-hover:text-blue-400 transition-colors">
+                            {data?.user?.name}
+                            <span className="text-gray-600 text-[9px] font-medium ml-2">
+                              {new Date(data?.createdAt).toLocaleString(
+                                "bn-BD",
+                                options,
+                              )}
+                            </span>
+                          </p>
+                          <p className="text-gray-400 text-sm leading-relaxed">
+                            {data?.text}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-white text-sm font-black mb-1 group-hover:text-blue-400 transition-colors">
-                          {data?.user?.name}
-                          <span className="text-gray-600 text-[9px] font-medium ml-2">
-                            {new Date(data?.createdAt).toLocaleString(
-                              "bn-BD",
-                              options,
-                            )}
-                          </span>
-                        </p>
-                        <p className="text-gray-400 text-sm leading-relaxed">
-                          {data?.text}
-                        </p>
-                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
 
               {/* ইনপুট সেকশন */}
               <div className="relative mt-auto">

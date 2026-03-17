@@ -106,7 +106,7 @@ const BlogCard = ({ post }) => {
                 </motion.button>
 
                 {/* কমেন্ট বাটন */}
-                <button
+                <motion.button
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -122,7 +122,7 @@ const BlogCard = ({ post }) => {
                   <span className="text-xs font-black tracking-widest">
                     {data?.length || "45"}
                   </span>
-                </button>
+                </motion.button>
 
                 {/* শেয়ার বাটন */}
                 <button className="flex items-center gap-2 text-gray-500 hover:text-purple-400 transition-colors">
@@ -155,6 +155,7 @@ const BlogCard = ({ post }) => {
         postTitle={post?.title}
         commentData={data}
         id={post?._id}
+        img={`${BASE_URL}${post.featuredimage?.url}`}
       />
     </>
   );

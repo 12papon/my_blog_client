@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBlogById } from "../Hooks/PostHooks/useGetBlogPost";
 import { useParams } from "react-router";
+import { useAuth } from "../Context/AuthorContext/AuthorContext";
 import {
   Clock,
   User,
@@ -14,6 +15,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import RecommendedSection from "../Component/FeaturedSection/RecommendedSection"; // আলাদা ফাইলে থাকবে
+import { useComment } from "../Hooks/Comment/PostComment/PostComment";
+import { usePostComment } from "../Hooks/Comment/GetComment/GetCom";
+
 const post = {
   id: 1,
   title: "২০২৬ সালের আধুনিক ওয়েব ডিজাইন এবং লাক্সারি ইউআই ট্রেন্ডস",
@@ -52,10 +56,16 @@ const post = {
   ],
 };
 
-const BlogDetails = ({ comment }) => {
+const BlogDetails = () => {
+  const { user } = useAuth();
+  const { mutate } = useComment();
   const BASE_URL = "http://localhost:8000";
   const { id } = useParams();
+  const { data: comment } = usePostComment(id);
   const { data, isLoading } = useBlogById(id);
+  const [comData, setComData] = useState("");
+
+  console.log(comment);
 
   const date = new Date(data?.createdAt);
   const month = date?.toLocaleString("bn-BD", { month: "long" });
@@ -78,6 +88,18 @@ const BlogDetails = ({ comment }) => {
       behavior: "smooth",
       block: "start",
     });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const commentData = {
+      user: user?._id,
+      post: data?._id,
+      text: comData,
+    };
+    console.log(commentData);
+
+    mutate(commentData);
+    setComData("");
   };
   return (
     <div className="min-h-screen  bg-transparent text-white pt-30 md:pt-40 pb-20 px-6 font-sans">
@@ -173,10 +195,15 @@ const BlogDetails = ({ comment }) => {
           {/* কমেন্ট ইনপুট বক্স */}
           <div className="mb-12 relative group">
             <textarea
+              onChange={(e) => setComData(e.target.value)}
+              value={comData}
               placeholder="আপনার মতামত লিখুন..."
               className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 focus:outline-none focus:border-blue-500/50 transition-all text-white min-h-[120px]"
             />
-            <button className="absolute bottom-4 right-4 bg-blue-600 px-6 py-2 rounded-xl font-bold text-sm hover:bg-blue-500 transition-colors">
+            <button
+              onClick={handleSubmit}
+              className="absolute bottom-4 right-4 bg-blue-600 px-6 py-2 rounded-xl font-bold text-sm hover:bg-blue-500 transition-colors"
+            >
               Post
             </button>
           </div>
