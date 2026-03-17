@@ -154,6 +154,7 @@ const BlogCard = ({ post }) => {
         onClose={closeModal}
         postTitle={post?.title}
         commentData={data}
+        id={post?._id}
       />
     </>
   );

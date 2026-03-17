@@ -9,14 +9,16 @@ import {
   Smile,
   Image as ImageIcon,
 } from "lucide-react";
-import { useCreateComment } from "../../Hooks/Comment/PostComment/PostComment";
 import { useAuth } from "../../Context/AuthorContext/AuthorContext";
+import { useComment } from "../../Hooks/Comment/PostComment/PostComment";
 
-const CommentPopup = ({ isOpen, onClose, postTitle, commentData }) => {
+const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id }) => {
   const { user } = useAuth();
-  console.log(user);
+  const 
+  console.log(user._id);
 
   const [comment, setComment] = useState("");
+
   const options = {
     year: "numeric",
     month: "long",
@@ -25,10 +27,18 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData }) => {
     minute: "2-digit",
     hour12: true, // ১২ ঘণ্টার ফরম্যাটে (AM/PM) দেখানোর জন্য
   };
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const commentData = {};
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const commentData = {
+      user: user?._id,
+      post: id,
+      text: comment,
+    };
+
+    console.log(commentData);
+
+    setComment("");
+  };
   return (
     <AnimatePresence>
       {isOpen && (
@@ -96,7 +106,10 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData }) => {
               {/* কমেন্ট লিস্ট (Scrollable) */}
               {commentData?.map((data) => {
                 return (
-                  <div className="max-h-[300px] overflow-y-auto mb-8 pr-4 space-y-6 custom-scrollbar">
+                  <div
+                    key={data?._id}
+                    className="max-h-[300px] overflow-y-auto mb-8 pr-4 space-y-6 custom-scrollbar"
+                  >
                     {/* ডামি কমেন্ট ১ */}
                     <div className="flex gap-4 group">
                       <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
@@ -133,12 +146,18 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData }) => {
                 />
 
                 <div className="absolute right-4 bottom-4 flex items-center gap-2">
-                  <button className="p-2 text-gray-500 hover:text-white transition-colors">
+                  <button
+                    onClick={() => {
+                      console.log("emoiji clicked");
+                    }}
+                    className="p-2 text-gray-500 hover:text-white transition-colors"
+                  >
                     <Smile size={20} />
                   </button>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    onClick={handleSubmit}
                     className="p-3 bg-blue-600 rounded-2xl text-white shadow-lg shadow-blue-600/20"
                   >
                     <Send size={18} />
