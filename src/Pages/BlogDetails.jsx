@@ -14,7 +14,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import RecommendedSection from "../Component/FeaturedSection/RecommendedSection"; // আলাদা ফাইলে থাকবে
-import { usePostComment } from "../Hooks/Comment/GetComment/GetCom";
 const post = {
   id: 1,
   title: "২০২৬ সালের আধুনিক ওয়েব ডিজাইন এবং লাক্সারি ইউআই ট্রেন্ডস",
@@ -53,24 +52,23 @@ const post = {
   ],
 };
 
-const BlogDetails = () => {
+const BlogDetails = ({ comment }) => {
   const BASE_URL = "http://localhost:8000";
   const { id } = useParams();
   const { data, isLoading } = useBlogById(id);
-  const { data: comment, isLoading: loadingComment } = usePostComment(id);
+
   const date = new Date(data?.createdAt);
   const month = date?.toLocaleString("bn-BD", { month: "long" });
   const year = date?.toLocaleString("bn-BD", { year: "numeric" });
   const getDate = date?.toLocaleString("bn-BD", { day: "numeric" });
-  console.log(comment);
 
   const [isReadMore, setIsReadMore] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
 
   // কন্টেন্ট স্লাইসিং লজিক
-  const displayContent = isReadMore
-    ? post.content
-    : post.content.slice(0, 400) + "...";
+  // const displayContent = isReadMore
+  //   ? post.content
+  //   : post.content.slice(0, 400) + "...";
 
   const commentSectionRef = useRef(null); // কমেন্ট সেকশনের জন্য রেফারেন্স
 
@@ -184,7 +182,7 @@ const BlogDetails = () => {
           </div>
 
           <div className="space-y-8">
-            {(showAllComments ? comment : comment.slice(0, 3)).map(
+            {(showAllComments ? comment : comment?.slice(0, 3))?.map(
               (comm, i) => (
                 <div
                   key={i}

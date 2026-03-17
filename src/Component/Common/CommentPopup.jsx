@@ -9,14 +9,26 @@ import {
   Smile,
   Image as ImageIcon,
 } from "lucide-react";
+import { useCreateComment } from "../../Hooks/Comment/PostComment/PostComment";
+import { useAuth } from "../../Context/AuthorContext/AuthorContext";
 
-const CommentPopup = ({
-  isOpen,
-  onClose,
-  postTitle = "This is web development",
-}) => {
+const CommentPopup = ({ isOpen, onClose, postTitle, commentData }) => {
+  const { user } = useAuth();
+  console.log(user);
+
   const [comment, setComment] = useState("");
-
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, // ১২ ঘণ্টার ফরম্যাটে (AM/PM) দেখানোর জন্য
+  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const commentData = {};
+  // };
   return (
     <AnimatePresence>
       {isOpen && (
@@ -65,7 +77,7 @@ const CommentPopup = ({
                       <span className="text-gray-500 text-lg">শেয়ার করুন</span>
                     </h2>
                     <p className="text-gray-700 w-9 h-9 p-1.5 bg-gray-50 font-bold flex items-center justify-center rounded-full text-[12px] italic">
-                      {`4`}
+                      {commentData?.length || 45}
                     </p>
                   </div>
 
@@ -82,28 +94,34 @@ const CommentPopup = ({
               </div>
 
               {/* কমেন্ট লিস্ট (Scrollable) */}
-              <div className="max-h-[300px] overflow-y-auto mb-8 pr-4 space-y-6 custom-scrollbar">
-                {/* ডামি কমেন্ট ১ */}
-                <div className="flex gap-4 group">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
-                    <div className="w-full h-full bg-[#030712] rounded-[14px] flex items-center justify-center font-bold text-white text-xs">
-                      AR
+              {commentData?.map((data) => {
+                return (
+                  <div className="max-h-[300px] overflow-y-auto mb-8 pr-4 space-y-6 custom-scrollbar">
+                    {/* ডামি কমেন্ট ১ */}
+                    <div className="flex gap-4 group">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
+                        <div className="w-full h-full bg-[#030712] rounded-[14px] flex items-center justify-center font-bold text-white text-xs">
+                          AR
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-white text-sm font-black mb-1 group-hover:text-blue-400 transition-colors">
+                          {data?.user?.name}
+                          <span className="text-gray-600 text-[9px] font-medium ml-2">
+                            {new Date(data?.createdAt).toLocaleString(
+                              "bn-BD",
+                              options,
+                            )}
+                          </span>
+                        </p>
+                        <p className="text-gray-400 text-sm leading-relaxed">
+                          {data?.text}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-black mb-1 group-hover:text-blue-400 transition-colors">
-                      আরিফ রহমান{" "}
-                      <span className="text-gray-600 text-[9px] font-medium ml-2">
-                        ২ মিনিট আগে
-                      </span>
-                    </p>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                      অসাধারণ ডিজাইন! ২০২৬ সালের টেক ট্রেন্ড নিয়ে এমন আর্টিকেল
-                      সত্যিই দরকার ছিল।
-                    </p>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
 
               {/* ইনপুট সেকশন */}
               <div className="relative mt-auto">
