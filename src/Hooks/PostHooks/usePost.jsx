@@ -12,15 +12,14 @@ export const useCreatePost = () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast.success("পোস্ট সফলভাবে তৈরি হয়েছে! 🎉");
 
-      //   if (data.data?._id) {
-      //     navigate(`/blogdetails/${data.data?._id}`);
-      //   }
+      if (data?._id) {
+        navigate(`/post/${data?._id}`);
+      }
     },
     onError: (error) => {
       const message = error.response?.data?.message || "কিছু একটা ভুল হয়েছে!";
       toast.error(message);
       console.log(message);
-      
     },
   });
 };

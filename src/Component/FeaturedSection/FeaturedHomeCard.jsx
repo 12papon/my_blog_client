@@ -1,8 +1,12 @@
 import React from "react";
+import { Link } from "react-router";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Sparkles, Zap } from "lucide-react";
 
 const FeaturedHomeCard = ({ data }) => {
+  console.log(data);
+  const BASE_URL = "http://localhost:8000";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -13,8 +17,8 @@ const FeaturedHomeCard = ({ data }) => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src={data.image}
-          alt={data.title}
+          src={`${BASE_URL}${data?.featuredimage?.url}`}
+          alt={data?.title}
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent group-hover:via-blue-900/40 transition-colors duration-500"></div>
@@ -26,21 +30,22 @@ const FeaturedHomeCard = ({ data }) => {
           {/* Badge & Meta */}
           <div className="flex items-center justify-between mb-4">
             <span className="flex items-center gap-2 bg-blue-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-              <Zap size={12} fill="white" /> {data.category || "Trending"}
+              <Zap size={12} fill="white" />{" "}
+              {data?.categories?.[0] || "Trending"}
             </span>
             <span className="text-white/60 text-xs font-medium flex items-center gap-1">
-              {data.readTime || "4 min"} Read
+              {data?.readTime || "4 min"} Read
             </span>
           </div>
 
           {/* Title */}
           <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight group-hover:text-blue-300 transition-colors">
-            {data.title}
+            {data?.title}
           </h3>
 
           {/* Short Excerpt */}
           <p className="text-white/70 text-sm line-clamp-2 mb-6 font-light leading-relaxed">
-            {data.desc ||
+            {data?.excerpt ||
               "একটি প্রিমিয়াম রিডিং অভিজ্ঞতা যা আপনাকে দেবে নতুন সব তথ্য..."}
           </p>
 
@@ -55,16 +60,17 @@ const FeaturedHomeCard = ({ data }) => {
                 />
               </div>
               <span className="text-white text-xs font-semibold">
-                {data.author || "Admin"}
+                {data?.author?.name || "Admin"}
               </span>
             </div>
-
-            <motion.div
-              whileHover={{ rotate: 45 }}
-              className="p-2.5 bg-blue-600 rounded-full text-white shadow-lg shadow-blue-500/50"
-            >
-              <ArrowUpRight size={20} />
-            </motion.div>
+            <Link to={`/post/${data?._id}`}>
+              <motion.div
+                whileHover={{ rotate: 45 }}
+                className="p-2.5 bg-blue-600 rounded-full text-white shadow-lg shadow-blue-500/50"
+              >
+                <ArrowUpRight size={20} />
+              </motion.div>
+            </Link>
           </div>
         </div>
       </div>

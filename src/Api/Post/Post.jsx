@@ -6,5 +6,5 @@ export const post = async (postData) => {
       "Content-Type": undefined,
     },
   });
-  return response.data;
+  return response.data.data;
 };

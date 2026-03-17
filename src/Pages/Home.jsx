@@ -2,7 +2,8 @@ import Hero from "../Component/FeaturedSection/Hero";
 import FeaturedHomeCard from "../Component/FeaturedSection/FeaturedHomeCard";
 import AboutSection from "../Component/FeaturedSection/AboutSection";
 import ContactSection from "../Component/FeaturedSection/ContactSection";
-import BlogDetails from "./BlogDetails";
+import { useFeatured } from "../Hooks/PostHooks/useFeature";
+import SingleCardLoader from "../Component/Common/SingleCardLoader";
 const featuredPosts = [
   {
     _id: "1",
@@ -38,13 +39,18 @@ const featuredPosts = [
   },
 ];
 const Home = () => {
+  const { data, isLoading } = useFeatured();
+
+  console.log(data);
   return (
     <div className="md:pt-30">
       <Hero />
       <section className="py-20 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-        {featuredPosts.map((post) => (
-          <FeaturedHomeCard key={post._id} data={post} />
-        ))}
+        {isLoading
+          ? [1, 2, 3].map((v, i) => <SingleCardLoader key={i} />)
+          : data?.map((post) => (
+              <FeaturedHomeCard key={post._id} data={post} />
+            ))}
       </section>
       <AboutSection />
       <section>

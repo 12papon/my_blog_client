@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useBlogById } from "../Hooks/PostHooks/useGetBlogPost";
+import { useParams } from "react-router";
 import {
   Clock,
   User,
@@ -12,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import RecommendedSection from "../Component/FeaturedSection/RecommendedSection"; // আলাদা ফাইলে থাকবে
+import { usePostComment } from "../Hooks/Comment/GetComment/GetCom";
 const post = {
   id: 1,
   title: "২০২৬ সালের আধুনিক ওয়েব ডিজাইন এবং লাক্সারি ইউআই ট্রেন্ডস",
@@ -51,6 +54,16 @@ const post = {
 };
 
 const BlogDetails = () => {
+  const BASE_URL = "http://localhost:8000";
+  const { id } = useParams();
+  const { data, isLoading } = useBlogById(id);
+  const { data: comment, isLoading: loadingComment } = usePostComment(id);
+  const date = new Date(data?.createdAt);
+  const month = date?.toLocaleString("bn-BD", { month: "long" });
+  const year = date?.toLocaleString("bn-BD", { year: "numeric" });
+  const getDate = date?.toLocaleString("bn-BD", { day: "numeric" });
+  console.log(comment);
+
   const [isReadMore, setIsReadMore] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
 
@@ -78,21 +91,22 @@ const BlogDetails = () => {
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.4em] mb-6">
-            <Sparkles size={12} /> {post.category}
+            <Sparkles size={12} /> {data?.categories?.[0]}
           </div>
           <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-8 italic">
-            {post.title}
+            {data?.title}
           </h1>
 
           <div className="flex flex-wrap justify-center items-center gap-6 text-gray-500 text-xs font-bold uppercase tracking-widest border-y border-white/5 py-6">
             <span className="flex items-center gap-2">
-              <User size={16} className="text-blue-500" /> {post.author}
+              <User size={16} className="text-blue-500" /> {data?.author?.name}
             </span>
             <span className="flex items-center gap-2">
               <Clock size={16} className="text-purple-500" /> {post.readTime}
             </span>
             <span className="flex items-center gap-2">
-              <Calendar size={16} className="text-pink-500" /> {post.date}
+              <Calendar size={16} className="text-pink-500" />{" "}
+              {`${getDate} ${month} ${year}`}
             </span>
           </div>
         </motion.div>
@@ -104,7 +118,7 @@ const BlogDetails = () => {
           className="relative h-[400px] md:h-[600px] rounded-[4rem] overflow-hidden mb-16 group shadow-2xl"
         >
           <img
-            src={post.image}
+            src={`${BASE_URL}${data?.featuredimage?.url}`}
             alt="Cover"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
@@ -115,11 +129,16 @@ const BlogDetails = () => {
         <div className="flex items-center justify-between mb-12 bg-white/[0.02] backdrop-blur-xl border border-white/10 p-4 rounded-3xl">
           <div className="flex gap-6 pl-4">
             <button className="flex items-center gap-2 hover:text-pink-500 transition-colors">
-              <Heart size={20} /> 1.2K
+              <Heart size={20} />{" "}
+              {data?.likes?.length
+                ? data?.likes?.length > 999
+                  ? data?.likes?.length + "K"
+                  : data?.likes?.length
+                : "1.5K"}
             </button>
             <button className="flex items-center gap-2 hover:text-blue-400 transition-colors">
               <MessageSquare onClick={scrollToComments} size={20} />{" "}
-              {post.comments.length}
+              {comment?.length}
             </button>
           </div>
           <button className="p-3 bg-white/5 rounded-2xl hover:bg-blue-600 transition-all">
@@ -130,7 +149,7 @@ const BlogDetails = () => {
         {/* --- ৪. কন্টেন্ট এরিয়া (Read More/Less) --- */}
         <div className="relative mb-20">
           <div className="text-lg md:text-xl text-gray-300 leading-[1.8] space-y-6">
-            {displayContent}
+            {data?.content}
           </div>
 
           <button
@@ -150,9 +169,7 @@ const BlogDetails = () => {
         >
           <h3 className="text-3xl font-black mb-10 flex items-center gap-4">
             Comments{" "}
-            <span className="text-gray-600 text-lg">
-              ({post.comments.length})
-            </span>
+            <span className="text-gray-600 text-lg">({comment?.length})</span>
           </h3>
 
           {/* কমেন্ট ইনপুট বক্স */}
@@ -167,15 +184,22 @@ const BlogDetails = () => {
           </div>
 
           <div className="space-y-8">
-            {(showAllComments ? post.comments : post.comments.slice(0, 3)).map(
+            {(showAllComments ? comment : comment.slice(0, 3)).map(
               (comm, i) => (
                 <div
                   key={i}
                   className="flex gap-4 border-b border-white/5 pb-6"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex-shrink-0" />
+                  <img
+                    src={comm.user.avatar}
+                    alt={comm.user.name}
+                    className="w-12 h-12 rounded-2xl bg-blue-500/20 flex-shrink-0"
+                  />
+
                   <div>
-                    <h4 className="font-bold text-white mb-1">{comm.user}</h4>
+                    <h4 className="font-bold text-white mb-1">
+                      {comm.user.name}
+                    </h4>
                     <p className="text-gray-400 text-sm">{comm.text}</p>
                   </div>
                 </div>

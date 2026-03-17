@@ -192,6 +192,7 @@ const Navbar = () => {
                         <div className="space-y-1">
                           <NavLink
                             to="/my_profile"
+                            onClick={() => setShowDropdown(false)}
                             className={({ isActive }) =>
                               `flex items-center p-2 hover:bg-white/10 space-x-2 rounded-xl cursor-pointer text-gray-200 transition-colors ${isActive ? "bg-white/10" : "bg-none"}`
                             }
@@ -201,6 +202,7 @@ const Navbar = () => {
                           </NavLink>
                           <NavLink
                             to="/my_blogs"
+                            onClick={() => setShowDropdown(false)}
                             className={({ isActive }) =>
                               `flex items-center p-2 hover:bg-white/10 space-x-2 rounded-xl cursor-pointer text-gray-200 transition-colors ${isActive ? "bg-white/10" : "bg-none"}`
                             }

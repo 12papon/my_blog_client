@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
       { path: "blog", element: <Blog /> },
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
-      { path: "blogdetails", element: <BlogDetails /> },
+      { path: "post/:id", element: <BlogDetails /> },
       // ২. শুধুমাত্র যারা লগইন নেই তাদের জন্য (Public Guard)
       {
         element: <PublicRoute />,
