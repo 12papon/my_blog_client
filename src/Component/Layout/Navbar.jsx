@@ -21,7 +21,6 @@ const Navbar = () => {
   const { user, Logout } = useAuth();
   const isLoggedIn = !!user;
   console.log(user);
-  console.log(isLoggedIn);
 
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);

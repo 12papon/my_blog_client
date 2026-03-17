@@ -13,8 +13,12 @@ import {
 } from "lucide-react";
 import CommentPopup from "../Common/CommentPopup";
 import { usePostComment } from "../../Hooks/Comment/GetComment/GetCom";
+import { useLike } from "../../Hooks/Like/LikeHook";
+import { useAuth } from "../../Context/AuthorContext/AuthorContext";
 
 const BlogCard = ({ post }) => {
+  const { user } = useAuth();
+  const { mutate } = useLike();
   const { data, idLoading } = usePostComment(post._id);
 
   // ১. পপআপ খোলা বা বন্ধ রাখার জন্য স্টেট
@@ -26,7 +30,14 @@ const BlogCard = ({ post }) => {
   // ৩. পপআপ বন্ধ করার ফাংশন
   const closeModal = () => setIsCommentOpen(false);
   const BASE_URL = "http://localhost:8000";
-  console.log(post);
+
+  const handleLike = (id) => {
+    const likeObj = {
+      postId: id,
+      uId: user?._id,
+    };
+    mutate(likeObj);
+  };
 
   return (
     <>
@@ -91,12 +102,17 @@ const BlogCard = ({ post }) => {
               <div className="flex items-center gap-6">
                 {/* লাইক বাটন */}
                 <motion.button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleLike(post?._id);
+                  }}
                   whileTap={{ scale: 1.5 }}
                   className="flex items-center gap-2 text-gray-500 hover:text-pink-500 transition-colors group/like"
                 >
                   <Heart
                     size={18}
-                    className="group-hover/like:fill-pink-500 transition-all"
+                    className={` ${post?.likes?.includes(user?._id) ? "fill-pink-500 " : "group-hover/like:fill-pink-500 transition-all"}`}
                   />
                   <span className="text-xs font-black tracking-widest">
                     {post.likes?.length > 999

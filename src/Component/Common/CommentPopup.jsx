@@ -35,11 +35,12 @@ const CommentPopup = ({ isOpen, onClose, postTitle, commentData, id, img }) => {
       post: id,
       text: comment,
     };
-    if(!commentData.text){
-      toast.error("কোন কমেন্ট লিক্ষা")
+    if (!commentData.text) {
+      toast.error("কোন কমেন্ট লিখা নেই");
+    } else {
+      mutate(commentData);
+      setComment("");
     }
-    mutate(commentData);
-    setComment("");
   };
   return (
     <AnimatePresence>

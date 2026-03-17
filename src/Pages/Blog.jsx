@@ -43,7 +43,6 @@ const posts = [
 const Blog = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useBlog(page);
-  console.log(data?.totalPage);
 
   // ৩. পেজিনেশন প্রপসগুলো তৈরি করা (এগুলোই তুমি পাস করবে)
   const paginationProps = {

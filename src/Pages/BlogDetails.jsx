@@ -17,6 +17,8 @@ import {
 import RecommendedSection from "../Component/FeaturedSection/RecommendedSection"; // আলাদা ফাইলে থাকবে
 import { useComment } from "../Hooks/Comment/PostComment/PostComment";
 import { usePostComment } from "../Hooks/Comment/GetComment/GetCom";
+import { useLike } from "../Hooks/Like/LikeHook";
+import toast from "react-hot-toast";
 
 const post = {
   id: 1,
@@ -59,13 +61,12 @@ const post = {
 const BlogDetails = () => {
   const { user } = useAuth();
   const { mutate } = useComment();
+  const { mutate: LikeMutate } = useLike();
   const BASE_URL = "http://localhost:8000";
   const { id } = useParams();
   const { data: comment } = usePostComment(id);
   const { data, isLoading } = useBlogById(id);
   const [comData, setComData] = useState("");
-
-  console.log(comment);
 
   const date = new Date(data?.createdAt);
   const month = date?.toLocaleString("bn-BD", { month: "long" });
@@ -96,10 +97,19 @@ const BlogDetails = () => {
       post: data?._id,
       text: comData,
     };
-    console.log(commentData);
-
-    mutate(commentData);
-    setComData("");
+    if (!commentData.text) {
+      toast.error("কোন কমেন্ট লিখা নেই");
+    } else {
+      mutate(commentData);
+      setComData("");
+    }
+  };
+  const handleLike = () => {
+    const likeObj = {
+      postId: id,
+      uId: user?._id,
+    };
+    LikeMutate(likeObj);
   };
   return (
     <div className="min-h-screen  bg-transparent text-white pt-30 md:pt-40 pb-20 px-6 font-sans">
@@ -148,8 +158,14 @@ const BlogDetails = () => {
         {/* --- ৩. ইন্টারঅ্যাকশন বার (Floating Style) --- */}
         <div className="flex items-center justify-between mb-12 bg-white/[0.02] backdrop-blur-xl border border-white/10 p-4 rounded-3xl">
           <div className="flex gap-6 pl-4">
-            <button className="flex items-center gap-2 hover:text-pink-500 transition-colors">
-              <Heart size={20} />{" "}
+            <button
+              onClick={handleLike}
+              className={`${data?.likes?.includes(user?._id) ? "text-pink-500 " : "flex items-center gap-2 hover:text-pink-500 transition-colors"}`}
+            >
+              <Heart
+                size={20}
+                className={`${data?.likes?.includes(user?._id) ? "fill-pink-500 inline-block" : "inline-block"}`}
+              />
               {data?.likes?.length
                 ? data?.likes?.length > 999
                   ? data?.likes?.length + "K"
